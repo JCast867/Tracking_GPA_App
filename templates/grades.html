@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grades</title>
+</head>
+<body>
+    <h1>Hello, {{ request.user.username }}!</h1>
+
+    <h2>Grades</h2>
+
+    <a href="{% url 'account_logout' %}">Log Out</a>
+
+</body>
+</html>
