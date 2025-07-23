@@ -1,0 +1,22 @@
+{% extends "base.html" %} 
+{% load crispy_forms_tags %} 
+{% block head_title %}Log Out{% endblock %} 
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md p-8 bg-white shadow-md rounded-xl">
+    <p class="text-lg font-medium pb-8 text-center">
+      Are you sure you want to log out?
+    </p>
+      <form method="POST" action="{% url 'account_logout' %}">
+        {% csrf_token %} 
+        {{ form|crispy }}
+        <div class="flex">
+          <a href="#home" class="w-1/2 m-4 px-4 py-2 rounded-full bg-white text-blue-500 text-center border border-blue-500">Cancel</a>
+          <button type="submit" class="bg-blue-500 m-4 w-1/2 text-white px-4 py-2 rounded-full">
+            Log out
+          </button>
+    </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
