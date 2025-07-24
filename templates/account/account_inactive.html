@@ -1,0 +1,25 @@
+{% extends "base.html" %} 
+{% block head_title %}Account Inactive{% endblock %} 
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md p-6 bg-white shadow-md rounded-xl">
+        <h2 class="text-xl text-center font-semibold px-4 py-2">Account Inactive</h2>
+        <p class="text-lg text-center p-4">We're sorry. This account has been deactivated</p>
+
+        {% if user.is_authenticated %}
+            <p class="text-center mt-2 text-sm text-gray-600">
+                Didn't get the email? <a href="{% url 'account_email' %}" class="text-blue-600 hover:underline">Resend confirmation email</a>.
+            </p>
+        {% else %}
+            <p class="text-center mt-4 text-sm text-gray-600">
+                Already activated? <a href="{% url 'account_login' %}" class="text-blue-600 hover:underline">Log in here</a>.
+            </p>
+        {% endif %}
+        <p class="text-center text-sm text-gray-600 mt-4">
+            <a href="#home" class="text-blue-600 hover:underline">
+                ← Back to homepage
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
