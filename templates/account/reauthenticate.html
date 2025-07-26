@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %} 
+{% load crispy_forms_tags %} 
+{% block head_title %}Confirm Access{% endblock %} 
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md p-8 bg-white shadow-md rounded-xl">
+        <h1 class="text-3xl font-bold p-6 text-center">Confirm Access</h1>
+        <p class="text-center mb-4">Please reauthenticate to safeguard your account.</p>
+
+        <form method="post" action="{% url 'account_reauthenticate' %}" class="mb-6">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">
+                    {% trans "Enter your password:" %}
+                </label>
+                <input type="password" 
+                    name="password" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                    placeholder="{% trans 'Password' %}"
+                    autocomplete="current-password">
+                {% if form.password.errors %}
+                    <p class="text-red-500 text-xs italic mt-1">{{ form.password.errors }}</p>
+                {% endif %}
+            </div>
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value}}"/>
+            {% endif %}
+
+            <button type="submit"
+                class="bg-blue-500 w-full text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                    {% trans "Confirm" %}
+            </button>
+        </form>
+
+        {% if reauthentication_alternatives %}
+            <hr class="my-6 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-center">{% trans "Alternative options" %}</h2>
+            <div class="flex flex-col space-y-3">
+                {% for alt in reauthentication_alternatives %}
+                    <a href="{{ alt.url }}"
+                        class="px-4 py-2 border border-blue-500 text-blue-500 rounded text-center hover:bg-blue-50 transition">
+                            {{ alt.description }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <p class="text-center text-sm text-gray-600 mt-4">
+            <a href="#home" class="text-blue-600 hover:underline">
+                ← Back to homepage
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
