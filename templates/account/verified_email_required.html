@@ -1,0 +1,35 @@
+{% extends "base.html" %} 
+{% block head_title %}Verify Your Email Address{% endblock %} 
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md p-6 bg-white shadow-md rounded-xl">
+        <h1 class="text-3xl font-bold p-6 text-center">Verify Your Email Address</h1>
+
+        <p class="mb-4 text-gray-700">
+            This part of the site requires us to verify that
+            you are who you claim to be. For this purpose, we require that you
+            verify ownership of your email address.
+        </p>
+
+        <p class="mb-4 text-gray-700">
+            We have sent an email to you for verification. 
+            Please click on the link inside that email. If you do not see the 
+            verification email in your main inbox, check your spam folder. 
+            Otherwise, contact us if you do not receive it within a few minutes.
+        </p>
+
+        <p class="mb-6 text-gray-700">
+            {% url 'account_email' as email_url %}
+            <strong>Note:</strong> you can still 
+            <a href="{{ email_url }}" class="text-blue-500 hover:underline">change your email address</a>.
+        </p>
+
+        <div class="text-center">
+            <a href="{% url 'account_email' %}" 
+               class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                Manage Email
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
