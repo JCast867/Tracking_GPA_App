@@ -1,0 +1,21 @@
+{% extends "base.html" %} 
+{% block head_title %}Verify Your Email Address{% endblock %} 
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+     <div class="w-full max-w-md p-6 bg-white shadow-md rounded-xl">
+        <h1 class="text-2xl font-bold p-6 text-center">Verify Your Email Address</h1>
+
+        <p class="mb-4 text-gray-700 text-center">
+            We have sent an email to you for verification. 
+            Please click on the link inside that email. If you do not see the 
+            verification email in your main inbox, check your spam folder. 
+            Otherwise, contact us if you do not receive it within a few minutes.
+        </p>
+
+        <p class="text-center text-sm text-gray-600 mt-4">
+            <a href="#home" class="text-blue-600 hover:underline">
+                ← Back to homepage
+            </a>
+        </p>
+</div>
+{% endblock %}
