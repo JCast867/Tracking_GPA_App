@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'crispy_forms',
     'crispy_tailwind',
+    # local
+    'classes'
 ]
 
 MIDDLEWARE = [
