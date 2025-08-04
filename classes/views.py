@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Course
 
 # Create your views here.
@@ -22,7 +23,7 @@ GRADE_TO_GPA = {
     "F": 0
     }
 
-class CourseCreateView(CreateView):
+class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
     template_name = "course_new.html"
     fields = ("name", "code", "grade", "credits")
@@ -32,7 +33,7 @@ class CourseCreateView(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
-class CourseListView(ListView):
+class CourseListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = "gpa_list.html"
     context_object_name = "courses"
@@ -59,4 +60,9 @@ class CourseListView(ListView):
             context['gpa'] = 0.00
 
         return context
+    
+class CourseDeleteView(LoginRequiredMixin, DeleteView):
+    model = Course
+    template_name = "course_delete.html"
+    success_url = reverse_lazy("course_list")
 

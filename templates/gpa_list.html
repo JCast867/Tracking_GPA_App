@@ -17,6 +17,7 @@
             <td class="border px-4 py-2">{{ course.code }} - {{ course.name }}</td>
             <td class="border px-4 py-2">{{ course.grade }}</td>
             <td class="border px-4 py-2">{{ course.credits }}</td>
+            <td class="border px-4 py-2"><a href="{% url 'course_delete' course.pk %}">Delete</a></td>
         </tr>
         {% empty %}
         <tr>
