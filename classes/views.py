@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Course
@@ -66,3 +66,13 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "course_delete.html"
     success_url = reverse_lazy("course_list")
 
+class CourseUpdateView(LoginRequiredMixin, UpdateView):
+    model = Course
+    fields = (
+        "name",
+        "code",
+        "grade",
+        "credits"
+    )
+    template_name = "course_edit.html"
+    success_url = reverse_lazy("course_list")
