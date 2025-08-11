@@ -1,30 +1,275 @@
 {% extends "base.html" %}
+{% load static %}
+{% block head_title %}Courses{% endblock %}
 {% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- header section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="school" class="w-8 h-8 text-blue-600"></i>
+                    <h1 class="text-3xl font-bold text-gray-800">GPA Tracking</h1>
+                </div>
+                <!-- user menu-->
+                 <div class="relative">
+                    <button id="userMenuButton" class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-medium text-gray-900">{{ user.username }}</p>
+                            <p class="text-sm text-gray-600">{{ user.email }}</p>
+                        </div>
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-semibold">{{ user.username.0|upper }}</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-600"></i>
+                    </button>
 
-<h1 class="text-2xl font-bold mb-4">Your GPA: {{ gpa }}</h1>
+                    <!-- dropdown menu -->
+                     <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 hidden z-50">
+                        <div class="px-4 py-2 border-b border-gray-100 sm:hidden">
+                            <p class="text-sm font-medium text-gray-900">{{ user.get_full_name|default:user.username }}</p>
+                            <p class="text-xs text-gray-600 truncate">{{ user.email }}</p>
+                        </div>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                            Settings
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a href="{% url 'account_logout' %}" class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                            Sign Out
+                        </a>
+                    </div>
+                 </div>
+            </div>
+            <p class="text-gray-600">Track your GPA throughout your school year with ease</p>
+        </div>
 
-<table class="min-w-full">
-    <thead>
-        <tr>
-            <th class="px-4 py-2">Course</th>
-            <th class="px-4 py-2">Grade</th>
-            <th class="px-4 py-2">Credits</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for course in courses %}
-        <tr>
-            <td class="border px-4 py-2">{{ course.code }} - {{ course.name }}</td>
-            <td class="border px-4 py-2">{{ course.grade }}</td>
-            <td class="border px-4 py-2">{{ course.credits }}</td>
-            <td class="border px-4 py-2"><a href="{% url 'course_delete' course.pk %}">Delete</a></td>
-            <td class="border px-4 py-2"><a href="{% url 'course_edit' course.pk %}">Edit</a></td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3" class="border px-4 py-2 text-center">No courses added yet</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock content %}
+        <!-- stats cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- GPA card -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Current GPA</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ gpa }}</p>
+                    </div>
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <i data-lucide="trophy" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i>
+                        <span>Out of 4.00 scale</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- total credits card -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Credits</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_credits }}</p>
+                    </div>
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i data-lucide="microscope" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- total courses card -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Courses</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ courses|length }}</p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <i data-lucide="book-open" class="w-6 h-6 text-purple-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- main content -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- table header -->
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-gray-800">Your Courses</h2>
+                    <a href="{% url 'course_new' %}" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors duration-200">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Add Course
+                    </a>
+                </div>
+            </div>
+
+            <!-- courses table -->
+            <div class="overflow-x-auto">
+                {% if not courses %}
+                    <div class="text-center py-12">
+                        <i data-lucide="book-open" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No courses added yet</h3>
+                        <p class="text-gray-600">Click "Add Course" to get started tracking your GPA</p>
+                    </div>
+                {% else %}
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left px-6 py-4 font-semibold text-gray-700">Course</th>
+                                <th class="text-left px-6 py-4 font-semibold text-gray-700">Grade</th>
+                                <th class="text-left px-6 py-4 font-semibold text-gray-700">Credits</th>
+                                <th class="text-right px-6 py-4 font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in courses %}
+                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors {% cycle 'bg-white' 'bg-gray-50/50' %}">
+                                    <td class="px-6 py-4">
+                                        <div>
+                                            <div class="font-semibold text-gray-900">{{ course.code }}</div>
+                                            <div class="text-sm text-gray-600">{{ course.name }}</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex px-3 py-1 rounded-full text-sm font-medium 
+                                            {% if course.grade == 'A+' or course.grade == 'A' or course.grade == 'A-' %}
+                                                text-emerald-600 bg-emerald-50
+                                            {% elif course.grade == 'B+' or course.grade == 'B' or course.grade == 'B-' %}
+                                                text-blue-600 bg-blue-50
+                                            {% elif course.grade == 'C+' or course.grade == 'C' or course.grade == 'C-' %}
+                                                text-yellow-600 bg-yellow-50
+                                            {% elif course.grade == 'D+' or course.grade == 'D' %}
+                                                text-orange-600 bg-orange-50
+                                            {% elif course.grade == 'F' %}
+                                                text-red-600 bg-red-50
+                                            {% else %}
+                                                text-gray-600 bg-gray-50
+                                            {% endif %}">
+                                            {{ course.grade }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-900 font-medium">{{ course.credits }}</td>
+                                    
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2 justify-end">
+                                            <a href="{% url 'course_edit' course.pk %}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                            </a>
+                                            <a href="{% url 'course_delete' course.pk %}" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- footer stats -->
+        {% if courses %}
+            <div class="mt-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- GPA breakdown -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">GPA Breakdown</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Quality Points:</span>
+                                <span class="font-medium">{{ total_quality_points|floatformat:1 }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Credit Hours:</span>
+                                <span class="font-medium">{{ total_credits }}</span>
+                            </div>
+                            <div class="border-t pt-2 mt-2">
+                                <div class="flex justify-between text-lg font-semibold">
+                                    <span>Cumulative GPA:</span>
+                                    <span class="text-blue-600">{{ gpa|floatformat:2 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- grade distribution -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Grade Distribution</h3>
+                        <div class="space-y-1">
+                            {% for grade, count in grade_distribution.items %}
+                                <div class="flex items-center justify-between">
+                                    <span class="inline-flex px-2 py-1 rounded text-xs font-medium 
+                                        {% if grade == 'A+' or grade == 'A' or grade == 'A-' %}
+                                            text-emerald-600 bg-emerald-50
+                                        {% elif grade == 'B+' or grade == 'B' or grade == 'B-' %}
+                                            text-blue-600 bg-blue-50
+                                        {% elif grade == 'C+' or grade == 'C' or grade == 'C-' %}
+                                            text-yellow-600 bg-yellow-50
+                                        {% elif grade == 'D+' or grade == 'D' %}
+                                            text-orange-600 bg-orange-50
+                                        {% elif grade == 'F' %}
+                                            text-red-600 bg-red-50
+                                        {% else %}
+                                            text-gray-600 bg-gray-50
+                                        {% endif %}">
+                                        {{ grade }}
+                                    </span>
+                                    <span class="text-sm text-gray-600">{{ count }} course{{ count|pluralize }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // initialize lucide icons
+    lucide.createIcons();
+
+    // user dropdown menu stuff
+    document.addEventListener('DOMContentLoaded', function() {
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userDropdown = document.getElementById('userDropdown');
+        const chevronIcon = userMenuButton.querySelector('[data-lucide="chevron-down"]');
+        
+        // toggle dropdown
+        userMenuButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isHidden = userDropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                userDropdown.classList.remove('hidden');
+                chevronIcon.style.transform = 'rotate(180deg)';
+            } else {
+                userDropdown.classList.add('hidden');
+                chevronIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+        
+        // close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.add('hidden');
+                chevronIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+        
+        // close dropdown when pressing escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                userDropdown.classList.add('hidden');
+                chevronIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+</script>
+{% endblock %}

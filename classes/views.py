@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Course
+from collections import Counter
 
 # Create your views here.
 
@@ -55,9 +56,19 @@ class CourseListView(LoginRequiredMixin, ListView):
             total_credits += course.credits
 
         if total_credits > 0:
-            context['gpa'] = round(total_points / total_credits, 2)
+            gpa = round(total_points / total_credits, 2)
         else:
-            context['gpa'] = 0.00
+            gpa = 0.00
+
+        grades = [course.grade for course in courses]
+        grade_distribution = dict(Counter(grades))
+        
+        context.update({
+            'gpa': gpa,
+            'total_credits': total_credits,
+            'total_quality_points': total_points,
+            'grade_distribution': grade_distribution,
+        })
 
         return context
     
