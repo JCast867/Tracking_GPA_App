@@ -1,10 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Delete</h1>
-<form action="" method="post">
-    {% csrf_token %}
-    <p>Are you sure you want to delete "{{ course.name }}"?</p>
-    <button class="bg-blue-500" type="submit">Confirm</button>
-</form>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-14">
+    <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-2xl p-8 shadow-lg overflow-hidden">
+            <div class="px-6 py-6 text-center">
+                <h1 class="text-3xl font-bold text-gray-800">Delete Course</h1>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-center text-lg font-medium text-gray-700 mb-2">
+                    Are you sure you want to delete:
+                </p>
+                <p class="text-center text-xl font-bold text-red-600 mb-4">
+                    "{{ course.name }}"
+                </p>
+            </div>
+
+            <form action="" method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="flex space-x-3">
+                    <a href="{% url 'course_list' %}" 
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 flex-1 rounded font-medium text-center transition duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit" 
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 flex-1 rounded font-medium transition duration-200">
+                        Delete Course
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-center text-sm text-gray-600 mt-6">
+                <a href="{% url 'course_list' %}" class="text-blue-600 hover:underline">
+                    ← Back to Courses
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
 {% endblock content %}

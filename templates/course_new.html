@@ -11,8 +11,8 @@
             <form action="" method="POST">
                 {% csrf_token %}
                 {{ form|crispy}}
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 w-full rounded" type="submit">Save</button>
             </form>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 w-full rounded" type="submit">Save</button>
             <p class="text-center text-sm text-gray-600 mt-4">
                 <a href="{% url 'course_list' %}" class="text-blue-600 hover:underline">
                     ← Back to Courses
